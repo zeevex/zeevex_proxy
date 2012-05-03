@@ -12,7 +12,7 @@ namespace :spec do
     current = %x{rvm-prompt v}
     
     fail = false
-    %w{1.8.7 1.9.2 ree}.each do |version|
+    %w{1.8.7 1.9.3 ree}.each do |version|
       puts "Switching to #{version}"
       Bundler.with_clean_env do
         system %{bash -c 'source ~/.rvm/scripts/rvm && rvm #{version} && bundle exec rake spec'}

@@ -43,7 +43,12 @@ module ZeevexProxy
     end
 
     def method_missing(name, *args, &block)
-      __getobj__.__send__(name, *args, &block)
+      obj = __getobj__
+      res = obj.__send__(name, *args, &block)
+
+      # if chainable method or returns "self" for some other reason,
+      # return this proxy instead
+      res.__id__ == obj.__id__ ? self : res
     end
 
   end

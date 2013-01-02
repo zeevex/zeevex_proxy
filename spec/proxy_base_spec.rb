@@ -99,6 +99,11 @@ describe ZeevexProxy::Base do
     it "should pass along blocks to proxy methods" do
       proxy.called_with_block? { nil }.should == true
     end
+
+    it "should return its own ptr if proxied method returns self" do
+      object.should_receive(:chainable).and_return(object)
+      proxy.chainable.__id__.should == proxy.__id__
+    end
   end
 
   context "method_missing provided as block" do

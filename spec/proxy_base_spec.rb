@@ -66,13 +66,15 @@ describe ZeevexProxy::Base do
     it "has the same object_id as the proxy target" do
       proxy.object_id.should == object.object_id
     end
+    it "returns target to __getobj__" do
+      proxy.__getobj__.should == object
+    end
     it "should return methods" do
       proxy.method(:responder_method).should == object.method(:responder_method)
     end
   end
 
   context "proxying to object" do
-    subject { object }
     it "should receive stub messages with arguments called on the proxy" do
       object.should_receive(:foo).with(5).and_return(100)
       proxy.foo(5).should == 100
@@ -96,6 +98,30 @@ describe ZeevexProxy::Base do
 
     it "should pass along blocks to proxy methods" do
       proxy.called_with_block? { nil }.should == true
+    end
+  end
+
+  context "method_missing provided as block" do
+    subject {
+      ZeevexProxy::Base.new({}) do |meth, *args, &block|
+        res = [meth, *args]
+        if block_given?
+          yield res
+        else
+          res
+        end
+      end
+    }
+    it "should receive stub messages with arguments called on the proxy" do
+      subject.foo(5).should == [:foo, 5]
+    end
+
+    it "should receive messages called with :send on the proxy" do
+      subject.__send__(:foo).should == [:foo]
+    end
+
+    it "should receive messages called with :send on the proxy" do
+      subject.send(:foo).should == [:send, :foo]
     end
   end
 

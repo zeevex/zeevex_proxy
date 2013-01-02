@@ -13,7 +13,7 @@ module ZeevexProxy
     end
   else
     class BasicObject
-      KEEP_METHODS = %w"__id__ __send__ method_missing"
+      KEEP_METHODS = %w"__id__ __send__ method_missing __getobj__"
 
       def self.remove_methods!
         m = (instance_methods) - KEEP_METHODS
@@ -29,13 +29,21 @@ module ZeevexProxy
   end
 
   class Base < BasicObject
-    def initialize(target, options = {})
-      super
-      @obj = target
+    def initialize(target, options = {}, &block)
+      super()
+      @obj = @__proxy_object__ = target
+      if block
+        eigenclass = class << self; self; end
+        eigenclass.__send__(:define_method, :method_missing, &block)
+      end
+    end
+
+    def __getobj__
+      @__proxy_object__
     end
 
     def method_missing(name, *args, &block)
-      @obj.__send__(name, *args, &block)
+      __getobj__.__send__(name, *args, &block)
     end
 
   end

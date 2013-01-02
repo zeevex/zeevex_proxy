@@ -105,7 +105,7 @@ describe ZeevexProxy::Base do
     subject {
       ZeevexProxy::Base.new({}) do |meth, *args, &block|
         res = [meth, *args]
-        if block_given?
+        if block
           yield res
         else
           res

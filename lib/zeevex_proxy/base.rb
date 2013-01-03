@@ -42,13 +42,15 @@ module ZeevexProxy
       @__proxy_object__
     end
 
+    def __substitute_self__(candidate, pself)
+      candidate.__id__ == pself.__id__ ? self : candidate
+    end
+
+    # if chainable method or returns "self" for some other reason,
+    # return this proxy instead
     def method_missing(name, *args, &block)
       obj = __getobj__
-      res = obj.__send__(name, *args, &block)
-
-      # if chainable method or returns "self" for some other reason,
-      # return this proxy instead
-      res.__id__ == obj.__id__ ? self : res
+      __substitute_self__(obj.__send__(name, *args, &block), obj)
     end
 
   end

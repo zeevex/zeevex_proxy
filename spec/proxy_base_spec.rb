@@ -30,8 +30,6 @@ describe ZeevexProxy::Base do
         "shouldn't see this one"
       end
     end
-
-    class ProxyClass < ZeevexProxy::Base; end
   end
 
   after(:each) do
@@ -42,13 +40,17 @@ describe ZeevexProxy::Base do
     Responder.new
   end
   
+  let :proxyclass do
+    Class.new(ZeevexProxy::Base)
+  end
+
   let :proxy do
-    ProxyClass.new object
+    proxyclass.new object
   end
 
   context "hygiene" do
     it "should not have instance methods previously defined on Object" do
-      ProxyClass.instance_methods.map(&:to_sym).should_not include(:responder_method)
+      proxyclass.instance_methods.map(&:to_sym).should_not include(:responder_method)
     end
   end
 

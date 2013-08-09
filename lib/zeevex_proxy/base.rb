@@ -23,7 +23,7 @@ module ZeevexProxy
         m.each{|m| undef_method(m)}
       end
 
-      def initialize(*args)
+      def self.inherited(subclass)
         BasicObject.remove_methods!
       end
 

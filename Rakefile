@@ -7,7 +7,7 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
 namespace :spec do
-  PLATFORMS = %w{1.9.3-p448 2.0.0-p247 jruby-1.7.4 1.8.7-p374}
+  PLATFORMS = %w{1.9.3-p448 2.0.0-p247 1.8.7-p374 jruby-1.7.4}
 
   desc "Run on three Rubies"
   task :platforms do

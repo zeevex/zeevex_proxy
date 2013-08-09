@@ -48,7 +48,7 @@ describe ZeevexProxy::Base do
 
   context "hygiene" do
     it "should not have instance methods previously defined on Object" do
-      ProxyClass.instance_methods.should_not include(:responder_method)
+      ProxyClass.instance_methods.map(&:to_sym).should_not include(:responder_method)
     end
   end
 

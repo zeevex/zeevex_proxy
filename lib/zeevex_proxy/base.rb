@@ -1,5 +1,5 @@
 module ZeevexProxy
-  if defined? ::BasicObject
+  if Object.const_defined?("BasicObject")
     # A class with no predefined methods that behaves similarly to Builder's
     # BlankSlate. Used for proxy classes.
     class BasicObject < ::BasicObject
@@ -10,13 +10,16 @@ module ZeevexProxy
       def raise(*args)
         ::Object.send(:raise, *args)
       end
+      
+      def initialize(*args); end
     end
   else
+    puts "Defining our own BasicObject"
     class BasicObject
-      KEEP_METHODS = %w"__id__ __send__ method_missing __getobj__"
+      KEEP_METHODS = %w"__id__ __send__ method_missing __getobj__".map(&:to_sym)
 
       def self.remove_methods!
-        m = (instance_methods) - KEEP_METHODS
+        m = (instance_methods.map(&:to_sym)) - KEEP_METHODS
         m.each{|m| undef_method(m)}
       end
 
@@ -51,6 +54,10 @@ module ZeevexProxy
     def method_missing(name, *args, &block)
       obj = __getobj__
       __substitute_self__(obj.__send__(name, *args, &block), obj)
+    end
+
+    def object_id
+      __getobj__.object_id
     end
 
   end

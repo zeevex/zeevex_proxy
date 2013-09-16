@@ -16,7 +16,7 @@ module ZeevexProxy
   else
     puts "Defining our own BasicObject"
     class BasicObject
-      KEEP_METHODS = %w"__id__ __send__ method_missing __getobj__".map(&:to_sym)
+      KEEP_METHODS = %w"__id__ __send__ method_missing __getobj__ object_id".map(&:to_sym)
 
       def self.remove_methods!
         m = (instance_methods.map(&:to_sym)) - KEEP_METHODS
@@ -54,10 +54,6 @@ module ZeevexProxy
     def method_missing(name, *args, &block)
       obj = __getobj__
       __substitute_self__(obj.__send__(name, *args, &block), obj)
-    end
-
-    def object_id
-      __getobj__.object_id
     end
 
   end

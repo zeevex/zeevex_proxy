@@ -12,6 +12,14 @@ module ZeevexProxy
       end
       
       def initialize(*args); end
+
+      # this causes a warning
+      old_verbosity = $VERBOSE
+      $VERBOSE = nil
+      def object_id
+        __id__
+      end
+      $VERBOSE = old_verbosity
     end
   else
     puts "Defining our own BasicObject"

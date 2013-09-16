@@ -65,8 +65,8 @@ describe ZeevexProxy::Base do
     it "responds_to a defined method on Responder" do
       proxy.should respond_to(:responder_method)
     end
-    it "has the same object_id as the proxy target" do
-      proxy.object_id.should == object.object_id
+    it "does not have the same object_id as the proxy target" do
+      proxy.object_id.should_not == object.object_id
     end
     it "returns target to __getobj__" do
       proxy.__getobj__.should == object
